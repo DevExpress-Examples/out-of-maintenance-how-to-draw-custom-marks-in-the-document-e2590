@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 #region #usings
 using DevExpress.XtraRichEdit.API.Native;
@@ -39,11 +35,13 @@ namespace CustomMarks
                 e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
 
                 Color curColor = (Color)info.UserData;
-                if (mark.Position < doc.Selection.Start) curColor = Color.Green;
-                    Pen p = new Pen(curColor, 3);
+                if (mark.Position < doc.Selection.Start) { curColor = Color.Green; }
+                using (Pen p = new Pen(curColor, 3))
+                {
                     p.StartCap = LineCap.Flat;
                     p.EndCap = LineCap.ArrowAnchor;
-                    e.Graphics.DrawLine(p, new Point(0 , info.Bounds.Y), info.Bounds.Location);
+                    e.Graphics.DrawLine(p, new Point(0, info.Bounds.Y), info.Bounds.Location);
+                }
             }
         }
         #endregion #custommark

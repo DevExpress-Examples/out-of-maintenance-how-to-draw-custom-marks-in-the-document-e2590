@@ -6,6 +6,7 @@ Imports System.Drawing
 Imports System.Text
 Imports System.Windows.Forms
 #Region "#usings"
+Imports DevExpress.XtraRichEdit
 Imports DevExpress.XtraRichEdit.API.Native
 Imports DevExpress.XtraRichEdit.Layout.Export
 Imports System.Drawing.Drawing2D
@@ -28,7 +29,7 @@ Namespace CustomMarks
             Dim m As CustomMark = doc.CustomMarks.Create(doc.Selection.Start, Color.DarkOrange)
         End Sub
 
-        Private Sub richEditControl1_CustomMarkDraw(ByVal sender As Object, ByVal e As DevExpress.XtraRichEdit.RichEditCustomMarkDrawEventArgs) Handles richEditControl1.CustomMarkDraw
+        Private Sub richEditControl1_CustomMarkDraw(ByVal sender As Object, ByVal e As RichEditCustomMarkDrawEventArgs) Handles richEditControl1.CustomMarkDraw
             For Each info As CustomMarkVisualInfo In e.VisualInfoCollection
                 Dim doc As Document = richEditControl1.Document
                 Dim mark As CustomMark = doc.CustomMarks.GetByVisualInfo(info)
@@ -38,13 +39,14 @@ Namespace CustomMarks
                 If mark.Position < doc.Selection.Start Then
                     curColor = Color.Green
                 End If
-                    Dim p As New Pen(curColor, 3)
-                    p.StartCap = LineCap.Flat
-                    p.EndCap = LineCap.ArrowAnchor
-                    e.Graphics.DrawLine(p, New Point(0, info.Bounds.Y), info.Bounds.Location)
+                Using p As New Pen(curColor, 3)
+                        p.StartCap = LineCap.Flat
+                        p.EndCap = LineCap.ArrowAnchor
+                        e.Graphics.DrawLine(p, New Point(0, info.Bounds.Y), info.Bounds.Location)
+                    End Using
             Next info
         End Sub
-        #End Region ' #custommark
+#End Region ' #custommark
 
         Private Sub btn_DeleteMarks_Click(ByVal sender As Object, ByVal e As EventArgs) Handles btn_DeleteMarks.Click
             Dim doc As Document = richEditControl1.Document
